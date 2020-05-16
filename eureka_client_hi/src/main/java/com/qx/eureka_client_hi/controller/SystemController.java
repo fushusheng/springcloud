@@ -1,6 +1,7 @@
 package com.qx.eureka_client_hi.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.qx.common.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +22,10 @@ public class SystemController {
     @RequestMapping("getUser")
     public String getSessionUser(HttpServletRequest request){
         System.out.println("请求了service-hi服务，port:"+port);
-        Object userObject = request.getSession().getAttribute("user");
-        if(userObject==null){
+        User user = (User) request.getSession().getAttribute("user");
+        if(user==null){
             return "获取失败";
         }
-        return JSON.toJSONString(userObject);
+        return JSONObject.toJSONString(user);
     }
 }
