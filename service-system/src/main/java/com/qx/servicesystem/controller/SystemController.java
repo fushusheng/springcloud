@@ -6,6 +6,7 @@ import com.qx.servicesystem.config.RedisUtil;
 import com.qx.servicesystem.service.SystemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import java.util.Date;
 
 @Api(value = "系统")
 @RestController
+@Slf4j
 public class SystemController {
     @Value("${server.port}")
     private String port;
@@ -48,7 +50,11 @@ public class SystemController {
     }
     @ApiOperation(value = "获取分布式锁",httpMethod = "POST")
     @RequestMapping("getLock")
-    public String getLock(){
-        return String.valueOf(redisUtil.tryLock("aa")+sdf.format(new Date()));
+    public synchronized String getLock(){
+        synchronized (port){
+            log.info("成功请求:{},当前事件：{}",Thread.currentThread().getName(),sdf.format(new Date()));
+            return String.valueOf(redisUtil.tryLock("aa")+sdf.format(new Date()));
+        }
+
     }
 }
