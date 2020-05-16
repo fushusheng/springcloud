@@ -1,0 +1,23 @@
+server:
+  port: 8769
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  application:
+    name: service-zuul
+zuul:
+  routes:
+    serviceHi:
+      path: /serviceHi/**
+      serviceId: SERVICE-HI
+      sensitiveHeaders: "*"
+    system:
+      path: /system/**
+      serviceId: SERVICE-SYSTEM
+      sensitiveHeaders: "*"
+  ignored-services: '*' #表示禁用默认路由，只认我们自己配置的路由.
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
